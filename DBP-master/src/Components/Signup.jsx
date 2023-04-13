@@ -15,11 +15,23 @@ from 'mdb-react-ui-kit';
 
 function Signup() {
   const [role,setrole] = useState();
+  const [users,setUsers] = useState([]);
   useEffect(()=>{
     const urlParams = new URLSearchParams(window.location.search);
     const role = urlParams.get('role');
     setrole(role);
     console.log(role);
+    async function fetchData() {
+      try {
+        const response = await fetch("http://localhost:4000/Login");
+        const data = await response.json();
+        setUsers(data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    fetchData();
   },[])
   const signupSchema = Yup.object({
     firstname: Yup.string().min(3).max(25).required("Please enter your name"),
@@ -46,11 +58,30 @@ function Signup() {
       validateOnChange: true,
       validateOnBlur: false,
       //// By disabling validation onChange and onBlur formik will validate on submit.
+      onChange:()=>{
+        if(isvalidemail){
+          errors.email = "Email Already Exists";
+        }
+        else{
+          errors.email = false;
+        }
+      },
       onSubmit: (values, action) => {
         document.getElementById('signup').submit();
         action.resetForm();
       },
     });
+
+    const isvalidemail = (event)=>{
+      event.preventDefault();
+      var email = document.getElementById("email").value;
+      for (let i = 0; i < users.length; i++) {
+        if (users[i].Email === email) {
+          return true;
+        }
+      }
+      return false;
+    }
 
 
   return (
@@ -73,15 +104,15 @@ function Signup() {
 
         <MDBCol md='4'>
 
-          <MDBCard className='my-5 '>
+          <MDBCard className='my-5 d-flex'>
             <MDBCardBody className='p-5'>
             <h4 className="display-10 fw-bold"style={{marginBottom: "25px"}}>
             Building Material <br />
             <span className="text-primary">Records System</span>
             </h4>
-            <form onClick={handleSubmit} action={`http://localhost:4000/Signup?role=${role}`} method='post' id='signup'>
+            <form  action={`http://localhost:4000/Signup?role=${role}`} method='post' id='signup'>
               <MDBRow>
-                <MDBCol col='6'>
+                <MDBCol lg='6' className="md-6">
                   <MDBInput wrapperClass='mb-4' label='First name' id='firstname' name='firstname' type='text'value={values.firstname}
                       onChange={handleChange}
                       onBlur={handleBlur}/>
@@ -90,7 +121,7 @@ function Signup() {
                     ) : null}
                 </MDBCol>
 
-                <MDBCol col='6'>
+                <MDBCol lg='6' className="md-6">
                   <MDBInput wrapperClass='mb-4' label='Last name' id='lastname' name='lastname' type='text'value={values.lastname}
                       onChange={handleChange}
                       onBlur={handleBlur}/>
@@ -133,7 +164,7 @@ function Signup() {
                       </Link>
                     </p></div>
 
-                    <button type="button" class="btn btn-primary btn-block mb-4" onClick={handleSubmit}>Signup</button>
+                    <button type="button" class="btn btn-primary btn-block mb-4" onClick={handleSubmit} onSubmit={handleSubmit}>Signup</button>
 
               </form>
 

@@ -9,6 +9,18 @@ var usersRouter = require('./routes/users');
 var signupRouter = require('./routes/Signup');
 var loginRouter = require('./routes/Login');
 var createcompanyRouter = require('./routes/CreateCompany');
+var GetDealerProfileRouter = require('./routes/GetDealerProfile');
+var UpdateDealerProfileRouter = require('./routes/UpdateDealerProfile');
+var GetMaxIdUserRouter = require('./routes/GetMaxIdUser');
+var GetMaxIdAddressRouter = require('./routes/GetMaxIdAddress');
+var GetCompanyTypeIdRouter = require('./routes/GetCompanyTypeId');
+var UpdateDealerAddressRouter = require('./routes/UpdateDealerAddress');
+var UpdateDealerAccountRouter = require('./routes/UpdateDealerAccount');
+var GetCompanyProfileRouter = require('./routes/GetCompanyProfile');
+var UpdateCompanyAddressRouter = require('./routes/UpdateCompanyAddress');
+var UpdateCompanyAccountRouter = require('./routes/UpdateCompanyAccount');
+var UpdateCompanyProfileRouter = require('./routes/UpdateCompanyProfile');
+
 
 var app = express();
 
@@ -35,6 +47,19 @@ app.use('/users', usersRouter);
 app.use('/Signup',signupRouter)
 app.use('/Login',loginRouter)
 app.use('/CreateCompany',createcompanyRouter);
+app.use('/GetDealerProfile',GetDealerProfileRouter);
+app.use('/UpdateDealerProfile',UpdateDealerProfileRouter);
+app.use('/GetMaxIdUser',GetMaxIdUserRouter);
+app.use('/GetMaxIdAddress',GetMaxIdAddressRouter);
+app.use('/GetCompanyTypeId',GetCompanyTypeIdRouter);
+app.use('/UpdateDealerAddress',UpdateDealerAddressRouter);
+app.use('/UpdateDealerAccount',UpdateDealerAccountRouter);
+app.use('/GetCompanyProfile',GetCompanyProfileRouter);
+app.use('/UpdateCompanyAddress',UpdateCompanyAddressRouter);
+app.use('/UpdateCompanyAccount',UpdateCompanyAccountRouter);
+app.use('/UpdateCompanyProfile',UpdateCompanyProfileRouter);
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
