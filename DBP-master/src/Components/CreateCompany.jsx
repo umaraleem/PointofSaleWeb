@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useState,useEffect } from 'react';
 
 import {
   MDBContainer,
@@ -14,6 +15,33 @@ import {
 from 'mdb-react-ui-kit';
 
 function CreateCompany() {
+  const [UserId,setUserId] = useState(0);
+  const [AddressId,setAddressId] = useState(0);
+  useEffect(()=>{;
+    // window.action.href=`http://localhost:4000/GetDealerProfile?UserId=${UserId}`; 
+    async function fetchData() {
+      try {
+        const response = await fetch(`http://localhost:4000/GetMaxIdUser`);
+        const data = await response.json();
+        setUserId(data[0].UserId);
+        console.log(data[0].UserId)
+      } catch (error) {
+      console.error(error);
+      }
+      try {
+        const response = await fetch(`http://localhost:4000/GetMaxIdAddress`);
+        const data = await response.json();
+        setAddressId(data[0].AddressId);
+        console.log(data[0].AddressId)
+      } catch (error) {
+      console.error(error);
+      }
+    }
+    fetchData();
+  },[])
+
+
+
   const signupSchema = Yup.object({
     companyname: Yup.string().min(3).max(40).required("Please enter your company name"),
     ownername: Yup.string().min(3).max(25).required("Please enter your owner name"),
@@ -21,7 +49,7 @@ function CreateCompany() {
     password: Yup.string().min(6).required("Please enter your password"),
     country: Yup.string().min(3).max(25).required("Please enter your country"),
     city: Yup.string().min(3).max(25).required("Please enter your city"),
-    des: Yup.string().min(3).max(100).required("Please enter your Address"),
+    Address: Yup.string().min(3).max(100).required("Please enter your Address"),
     companytype: Yup.string().min(3).max(25).required("Please enter your company type"),
   });
 
@@ -32,7 +60,7 @@ function CreateCompany() {
     password: "",
     country:"",
     city:"",
-    des:"",
+    Address:"",
     companytype:""
   };
 
@@ -68,18 +96,18 @@ function CreateCompany() {
 
         </MDBCol>
 
-        <MDBCol md='7'>
+        <MDBCol md='7' >
 
-          <MDBCard className='my-5 '>
+          <MDBCard className='my-5 d-flex'>
             <MDBCardBody className='p-5'>
             <h4 className="display-10 fw-bold"style={{marginBottom: "25px"}}>
             Building Material <br />
             <span className="text-primary">Records System</span>
             </h4>
-            <form onClick={handleSubmit} action={`http://localhost:4000/CreateCompany`} method='post' id='createcompany'>
+            <form action={`http://localhost:4000/CreateCompany?UserId=${UserId}&AddressId=${AddressId}`} method='post' id='createcompany'>
             
             <MDBRow>
-                <MDBCol col='6'>
+                <MDBCol lg='6' className="md-6">
                   <MDBInput wrapperClass='mb-4' label='Company Name' id='companyname' name='companyname' type='text'value={values.companyname}
                       onChange={handleChange}
                       onBlur={handleBlur}/>
@@ -87,7 +115,7 @@ function CreateCompany() {
                       <p className="form-error" style={{color:"red", marginTop: "-25px"}}>{errors.companyname}</p>
                     ) : null}
                 </MDBCol>
-                <MDBCol col='6'>
+                <MDBCol lg='6' className="md-6">
                     <MDBInput wrapperClass='mb-4' label='Owner Name' id='ownername' name='ownername' type='text'value={values.ownername}
                       onChange={handleChange}
                       onBlur={handleBlur}/>
@@ -98,7 +126,7 @@ function CreateCompany() {
             </MDBRow>
 
             <MDBRow>
-            <MDBCol col='6'>
+            <MDBCol lg='6' className="md-6">
             <MDBInput wrapperClass='mb-4' label='Email' id='email' name='email' type='email'value={values.email}
                       onChange={handleChange}
                       onBlur={handleBlur}/>
@@ -106,7 +134,7 @@ function CreateCompany() {
                       <p className="form-error" style={{color:"red", marginTop: "-25px"}}>{errors.email}</p>
                     ) : null}
             </MDBCol>
-            <MDBCol col='6'>
+            <MDBCol lg='6' className="md-6">
             <MDBInput wrapperClass='mb-4' label='Password' id='password' name='password' type='password'value={values.password}
                       onChange={handleChange}
                       onBlur={handleBlur}/>
@@ -117,7 +145,7 @@ function CreateCompany() {
             </MDBRow>
 
             <MDBRow>
-            <MDBCol col='6'>
+            <MDBCol lg='6' className="md-6">
             <MDBInput wrapperClass='mb-4' label='Country' id='country' name='country' type='country'value={values.country}
                       onChange={handleChange}
                       onBlur={handleBlur}/>
@@ -125,7 +153,7 @@ function CreateCompany() {
                       <p className="form-error" style={{color:"red", marginTop: "-25px"}}>{errors.country}</p>
                     ) : null}
             </MDBCol>
-            <MDBCol col='6'>
+            <MDBCol lg='6' className="md-6">
             <MDBInput wrapperClass='mb-4' label='City' id='city' name='city' type='city'value={values.city}
                       onChange={handleChange}
                       onBlur={handleBlur}/>
@@ -136,15 +164,15 @@ function CreateCompany() {
             </MDBRow>
 
             <MDBRow>
-            <MDBCol col='6'>
-            <MDBInput wrapperClass='mb-4' label='Address' id='des' name='des' type='des'value={values.des}
+            <MDBCol lg='6' className="md-6">
+            <MDBInput wrapperClass='mb-4' label='Address' id='Address' name='Address' type='Address'value={values.Address}
                       onChange={handleChange}
                       onBlur={handleBlur}/>
-                      {errors.des && touched.des ? (
-                      <p className="form-error" style={{color:"red", marginTop: "-25px"}}>{errors.des}</p>
+                      {errors.Address && touched.Address ? (
+                      <p className="form-error" style={{color:"red", marginTop: "-25px"}}>{errors.Address}</p>
                     ) : null}
             </MDBCol>
-            <MDBCol col='6'>
+            <MDBCol lg='6' className="md-6">
             <MDBInput wrapperClass='mb-4' label='Company Type' id='companytype' name='companytype' type='companytype'value={values.companytype}
                       onChange={handleChange}
                       onBlur={handleBlur}/>
@@ -169,7 +197,7 @@ function CreateCompany() {
                       </Link>
                     </p></div>
 
-                    <button type="button" class="btn btn-primary btn-block mb-4" onClick={handleSubmit}>Signup</button>
+                    <button type="button" class="btn btn-primary btn-block mb-4"onSubmit={handleSubmit} onClick={handleSubmit}>Signup</button>
 
                     </form>
 
